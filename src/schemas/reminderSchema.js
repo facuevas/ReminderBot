@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const reminderSchema = mongoose.Schema({
+const ReminderSchema = new Schema({
     setByUser: String,
     reminderMessage: String,
     reminderSetDate: Date,
@@ -8,4 +9,4 @@ const reminderSchema = mongoose.Schema({
     nextTimeToSendReminder: Date
 });
 
-module.exports = reminderSchema;
+module.exports = mongoose.model('ReminderSchema', ReminderSchema);

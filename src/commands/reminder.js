@@ -1,20 +1,45 @@
-const reminderSchema = require('../schemas/reminderSchema');
+const ReminderSchema = require('../schemas/ReminderSchema');
 // TODO
 // Create a reminder and post it to the mongoDB database
 const createReminder = async (reminder, msg) => {
     let newSetDate = new Date();
     let nextTimeToSendReminder = new Date();
     nextTimeToSendReminder = nextTimeToSendReminder.addDays(reminder.reminderDayCycle);
-    await msg.reply(
-        `\`\`\`
-        \nThe Following Message Will Be Saved: 
-        \nReminder set by: ${reminder.setByUser}
-        \nReminder message: ${reminder.reminderMessage}                    
-        \nReminder set date: ${newSetDate}
-        \nDays before reminder: ${reminder.reminderDayCycle}
-        \nnextTimeToSendReminder: ${nextTimeToSendReminder}
-        \`\`\``);
+
+    
+        // REFACTOR THIS.
+        // WE CAN WRITE THIS CLEANER
+        // FOR NOW LET'S POST TO DATABASE
+        const newRS = {
+            setByUser: reminder.setByUser,
+            reminderMessage: reminder.reminderMessage,
+            reminderSetDate: newSetDate,
+            reminderDayCycle: reminder.reminderDayCycle,
+            nextTimeToSendReminder: nextTimeToSendReminder
+        }
+        const rs = new ReminderSchema(newRS);
+        await rs.save(error => {
+            if (error) {
+                console.log("ERROR SAVING REMINDER");
+            }
+            else {
+                msg.reply(
+                    `\`\`\`
+                    \nThe Following Message Will Be Saved: 
+                    \nReminder set by: ${reminder.setByUser}
+                    \nReminder message: ${reminder.reminderMessage}                    
+                    \nReminder set date: ${newSetDate}
+                    \nDays before reminder: ${reminder.reminderDayCycle}
+                    \nnextTimeToSendReminder: ${nextTimeToSendReminder}
+                    \`\`\``);
+            }
+        });
 };
+
+// DISPLAY THE REMINDERS
+const getReminder = () => {
+    
+}
 
 
 // Add Days prototype function
