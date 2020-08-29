@@ -47,11 +47,30 @@ const getReminderByUser = async (msg, caller) => {
             msg.reply("HERE ARE YOUR REMINDERS\n");
             document.forEach(reminder => {
                 msg.reply(displayReminder(reminder));
-            })
+            }) 
             console.log(document);
         }
     });
     //await MyModel.find({ name: 'john', age: { $gte: 18 } }).exec();
+}
+
+const remind = async (msg) => {
+    await ReminderSchema.find({ setByUser: caller}).populate('reminders').exec((error, document) => {
+        if (error) {
+            console.log(error);
+        }
+        else {
+            msg.reply("HERE ARE YOUR REMINDERS\n");
+            document.forEach(reminder => {
+                msg.reply(displayReminder(reminder));
+            }) 
+            console.log(document);
+        }
+    });
+}
+
+const updateReminder = async (reminder) => {
+
 }
 
 const displayReminder = reminder => {
@@ -73,3 +92,4 @@ Date.prototype.addDays = days => {
 
 exports.createReminder = createReminder;
 exports.getReminderByUser = getReminderByUser;
+exports.remind = remind;
