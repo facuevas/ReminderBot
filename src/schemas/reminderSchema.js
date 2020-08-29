@@ -4,7 +4,7 @@ const reminderSchema = mongoose.Schema({
     setByUser: String,
     reminderMessage: String,
     reminderSetDate: Date,
-    reminderCycle: String,
+    reminderDayCycle: Number,
     nextTimeToSendReminder: Date
 });
 

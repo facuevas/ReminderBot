@@ -50,10 +50,9 @@ client.on('message', msg => {
                     msg.reply("ERROR. Please format as following: ```createreminder! \nreminder message \nreminder occurance (1d, 2w, 3y)```");
                 }
                 const reminder = {
-                    setUserBy: user,
+                    setByUser: user,
                     reminderMessage: args[1],
-                    reminderCycle: args[2],
-                    reminderSetDate: Date.now()
+                    reminderDayCycle: parseInt(args[2]),
                 };
                 createReminder(reminder, msg);
                 break;
