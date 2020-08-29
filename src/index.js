@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 require('dotenv').config();
 const config = require('./config.json');
 const mongoose = require('mongoose');
-const { createReminder,  getReminderByUser, remind} = require('./commands/reminder');
+const { createReminder, getReminder } = require('./commands/reminder');
 
 // Connect to MongoDB database
 const uri = process.env.ATLAS_DB_URI;
@@ -37,10 +37,7 @@ client.on('message', msg => {
 
     if (config.prefix.includes(args[0])) {
 
-        const user = msg.author.username;
-
         switch (args[0]) {
-
             case "createreminder!":
                 // we want three arguments separated by newlines
                 // first argument is our prefix command
@@ -50,14 +47,13 @@ client.on('message', msg => {
                     msg.reply("ERROR. Please format as following: ```createreminder! \nreminder message \nnumber of days in between reminder```");
                 }
                 const reminder = {
-                    setByUser: user,
-                    reminderMessage: args[1],
-                    reminderDayCycle: parseInt(args[2]),
+                    message: args[1],
+                    dayOccurance: parseInt(args[2])
                 };
                 createReminder(reminder, msg);
                 break;
             case "getreminder!":
-                getReminderByUser(msg, user);
+                getReminder(msg);
                 break;
             case "enablereminders!":
                 break;
@@ -65,8 +61,6 @@ client.on('message', msg => {
                 break;
         }
     }
-    
-    remind(msg);
 });
 
 client.login(process.env.DISCORD_TOKEN);
