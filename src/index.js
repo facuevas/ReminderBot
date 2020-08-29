@@ -25,9 +25,42 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-    const args = msg.content.split(" ");
+    // split message content into newlines
+    let args = msg.content.split("\n");
+
+    // if args array is 1
+    // there are no new lines
+    // instead, split as spaces
+    if (args.length === 1) {
+        args = msg.content.split(" ");
+    }
+
     if (config.prefix.includes(args[0])) {
-        msg.reply(args[1]);
+
+        const user = msg.author.username;
+
+        switch (args[0]) {
+
+            case "createreminder!":
+                // we want three arguments separated by newlines
+                // first argument is our prefix command
+                // second argument is our reminder message
+                // third argument is our reminder occurance
+                if (args.length !== 3) {
+                    msg.reply("ERROR. Please format as following: ```createreminder! \nreminder message \nreminder occurance (1d, 2w, 3y)```");
+                }
+                const reminder = {
+                    setUserBy: user,
+                    reminderMessage: args[1],
+                    reminderCycle: args[2],
+                    reminderSetDate: Date.now()
+                };
+                createReminder(reminder, msg);
+                break;
+            case "getreminder!":
+                msg.reply("here are your reminders");
+                break;
+        }
     }
 });
 
