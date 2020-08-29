@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 require('dotenv').config();
 const config = require('./config.json');
 const mongoose = require('mongoose');
-const { createReminder } = require('./commands/reminder');
+const { createReminder,  getReminderByUser} = require('./commands/reminder');
 
 // Connect to MongoDB database
 const uri = process.env.ATLAS_DB_URI;
@@ -57,7 +57,7 @@ client.on('message', msg => {
                 createReminder(reminder, msg);
                 break;
             case "getreminder!":
-                msg.reply("here are your reminders");
+                getReminderByUser(msg, user);
                 break;
         }
     }

@@ -1,4 +1,5 @@
 const ReminderSchema = require('../schemas/ReminderSchema');
+const { User } = require('discord.js');
 // TODO
 // Create a reminder and post it to the mongoDB database
 const createReminder = async (reminder, msg) => {
@@ -37,10 +38,29 @@ const createReminder = async (reminder, msg) => {
 };
 
 // DISPLAY THE REMINDERS
-const getReminder = () => {
-    
+const getReminderByUser = async (msg, caller) => {
+    await ReminderSchema.find({ setByUser: caller}).populate('reminders').exec((error, document) => {
+        if (error) {
+            console.log(error);
+        }
+        else {
+            msg.reply("HERE ARE YOUR REMINDERS\n");
+            document.forEach(reminder => {
+                msg.reply(displayReminder(reminder));
+            })
+            console.log(document);
+        }
+    });
+    //await MyModel.find({ name: 'john', age: { $gte: 18 } }).exec();
 }
 
+const displayReminder = reminder => {
+    return `\`\`\`
+    \nMessage: ${reminder.reminderMessage}
+    \nOccurance: ${reminder.reminderDayCycle} day(s)
+    \nNext Time For Reminder: ${reminder.nextTimeToSendReminder}
+     \`\`\``;
+}
 
 // Add Days prototype function
 // Taken from stackoverflow
@@ -52,3 +72,4 @@ Date.prototype.addDays = days => {
 
 
 exports.createReminder = createReminder;
+exports.getReminderByUser = getReminderByUser;
