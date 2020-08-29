@@ -70,5 +70,4 @@ Date.prototype.addDays = (days) => {
     return date;
 };
 
-exports.createReminder = createReminder;
-exports.getReminder = getReminder;
+module.exports = { createReminder, getReminder };
