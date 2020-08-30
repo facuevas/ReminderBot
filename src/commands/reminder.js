@@ -1,44 +1,52 @@
 const ReminderSchema = require("../schemas/ReminderSchema");
+const { Message } = require('discord.js');
 
-// TODO
-// Create a reminder and post it to the mongoDB database
+/*
+    This function creates a reminder and posts
+    it to the MongoDB database.
+*/
 const createReminder = async ({ message, dayOccurance }, client) => {
+    // Create newSetDate Date
     let newSetDate = new Date();
+    // create nextTimeToSendReminder date
     let nextTimeToSendReminder = new Date();
+    // Add occurance of days 
     nextTimeToSendReminder = nextTimeToSendReminder.addDays(
         dayOccurance
     );
-    console.log(client.channel.id);
-    // REFACTOR THIS.
-    // WE CAN WRITE THIS CLEANER
-    // FOR NOW LET'S POST TO DATABASE
-    const newRS = {
+
+    // Create the ReminderSchema object 
+    const rs = new ReminderSchema({
         channelId: client.channel.id,
         message,
         dayOccurance,
         setDate: newSetDate,
         nextReminderDate: nextTimeToSendReminder,
-    };
-    const rs = new ReminderSchema(newRS);
-      await rs.save((error) => {
+    });
+
+    // Save to the database
+    await rs.save((error) => {
         if (error) {
-          console.log("ERROR SAVING REMINDER");
+            console.log("ERROR SAVING REMINDER");
         } else {
             client.reply(
-            `\`\`\`
+                `\`\`\`
             \nThe Following Message Will Be Saved: 
-            \nReminder saved in channel ID: ${newRS.channelId}
-            \nReminder message: ${newRS.message}                    
-            \nReminder set date: ${newRS.dayOccurance}
-            \nDays before reminder: ${newRS.setDate}
-            \nnextTimeToSendReminder: ${newRS.nextReminderDate}
+            \nReminder saved in channel ID: ${rs.channelId}
+            \nReminder message: ${rs.message}                    
+            \nReminder set date: ${rs.dayOccurance}
+            \nDays before reminder: ${rs.setDate}
+            \nnextTimeToSendReminder: ${rs.nextReminderDate}
             \`\`\``
             );
         }
-      });
+    });
 };
 
-// DISPLAY THE REMINDERS
+/*
+    This function sends a mesasge to the channel
+    displaying the current reminders set to the channel.
+*/
 const getReminder = async client => {
     await ReminderSchema.find({ channelId: client.channel.id })
         .populate("reminders")
@@ -54,8 +62,25 @@ const getReminder = async client => {
         });
 };
 
+const deleteReminder = async (client, reminderId) => {
+    await ReminderSchema.findByIdAndDelete(reminderId, (error, document) => {
+        if (error) {
+            console.log(error);
+            client.reply("ERROR DELETING REMINDER. TRY AGAIN LATER");
+        }
+        else {
+            if (!document) {
+                client.reply("Reminder ID is not valid or has been already deleted");
+                return;
+            }
+            client.reply(`The following reminder has been deleted:\n ${displayReminder(document)}`);
+        }
+    });
+}
+
 const displayReminder = (reminder) => {
     return `\`\`\`
+    \nReminder ID: ${reminder._id}
     \nMessage: ${reminder.message}
     \nOccurance: ${reminder.dayOccurance} day(s)
     \nNext Time For Reminder: ${reminder.nextReminderDate}
@@ -70,4 +95,4 @@ Date.prototype.addDays = (days) => {
     return date;
 };
 
-module.exports = { createReminder, getReminder };
+module.exports = { createReminder, getReminder, deleteReminder };

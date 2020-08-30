@@ -1,6 +1,7 @@
 {
     "prefix": [
         "createreminder!",
-        "getreminder!"
+        "getreminder!",
+        "deletereminder!"
     ]
 }

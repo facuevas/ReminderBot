@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 require('dotenv').config();
 const config = require('./config.json');
 const mongoose = require('mongoose');
-const { createReminder, getReminder } = require('./commands/reminder');
+const { createReminder, getReminder, deleteReminder } = require('./commands/reminder');
 
 // Connect to MongoDB database
 const uri = process.env.ATLAS_DB_URI;
@@ -44,7 +44,8 @@ client.on('message', msg => {
                 // second argument is our reminder message
                 // third argument is our reminder occurance
                 if (args.length !== 3) {
-                    msg.reply("ERROR. Please format as following: ```createreminder! \nreminder message \nnumber of days in between reminder```");
+                    msg.reply("ERROR. Please format as following: \`\`\`createreminder! \nreminder message \nnumber of days in between reminder\`\`\`");
+                    return;
                 }
                 const reminder = {
                     message: args[1],
@@ -55,7 +56,13 @@ client.on('message', msg => {
             case "getreminder!":
                 getReminder(msg);
                 break;
-            case "enablereminders!":
+            case "deletereminder!":
+                const reminderId = args[1];
+                if (!reminderId) {
+                    msg.reply("To delete reminders, format as \`\`\`deletereminder! reminderID\`\`\`");
+                    return;
+                }
+                deleteReminder(msg, reminderId);
                 break;
             case "disablereminders!":
                 break;
