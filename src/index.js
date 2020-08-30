@@ -3,7 +3,10 @@ const Discord = require('discord.js');
 require('dotenv').config();
 const config = require('./config.json');
 const mongoose = require('mongoose');
-const { createReminder, getReminder, deleteReminder } = require('./commands/reminder');
+const { createReminder, 
+    getReminder, 
+    deleteReminder, 
+    sendReminders } = require('./commands/reminder');
 
 // Connect to MongoDB database
 const uri = process.env.ATLAS_DB_URI;
@@ -22,6 +25,11 @@ const client = new Discord.Client();
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`);
+    const channelsConnected = client.channels.cache.array();
+    const textChannels = channelsConnected.filter(channel => channel.type === 'text');
+    sendReminders(client, [textChannels[2]]);
+    //textChannels[2].send("HELLO WORLD");
+    //console.log(client.channels.cache);
 });
 
 client.on('message', msg => {

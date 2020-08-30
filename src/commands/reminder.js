@@ -78,6 +78,22 @@ const deleteReminder = async (client, reminderId) => {
     });
 }
 
+const sendReminders = async (client, channels) => {
+    channels.forEach(channel => {
+        console.log(channel.id);
+        ReminderSchema.find({channelId: channel.id})
+            .populate('reminders')
+            .exec((error, document) => {
+                if (error) {
+                    channel.send("ERROR");
+                }
+                if (document) {
+                    document.forEach(reminder => channel.send(displayReminder(reminder)));
+                }
+            });
+    })
+}
+
 const displayReminder = (reminder) => {
     return `\`\`\`
     \nReminder ID: ${reminder._id}
@@ -95,4 +111,8 @@ Date.prototype.addDays = (days) => {
     return date;
 };
 
-module.exports = { createReminder, getReminder, deleteReminder };
+module.exports = { 
+    createReminder, 
+    getReminder, 
+    deleteReminder, 
+    sendReminders };
