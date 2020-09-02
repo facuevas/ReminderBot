@@ -27,7 +27,17 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`);
     const channelsConnected = client.channels.cache.array();
     const textChannels = channelsConnected.filter(channel => channel.type === 'text');
-    sendReminders(client, [textChannels[2]]);
+    const todaysDate = {
+        day: new Date().getDate(),
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear()
+    }
+    const testDate = {
+        day: 30,
+        month: 8,
+        year: 2020
+    }
+    sendReminders(client, [textChannels[2]], testDate);
     //textChannels[2].send("HELLO WORLD");
     //console.log(client.channels.cache);
 });
