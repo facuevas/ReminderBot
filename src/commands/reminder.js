@@ -22,23 +22,16 @@ const createReminder = async ({ message, dayOccurance }, client) => {
         nextReminderDate: nextTimeToSendReminder,
     });
 
-    // Save to the database
-    await rs.save((error) => {
-        if (error) {
-            console.log("ERROR SAVING REMINDER");
-        } else {
-            client.reply(
-                `\`\`\`
-            \nThe Following Message Will Be Saved: 
-            \nReminder saved in channel ID: ${rs.channelId}
-            \nReminder message: ${rs.message}                    
-            \nReminder set date: ${rs.dayOccurance}
-            \nDays before reminder: ${rs.setDate}
-            \nnextTimeToSendReminder: ${rs.nextReminderDate}
-            \`\`\``
-            );
-        }
-    });
+    client.reply(
+        `\`\`\`
+        \nThe Following Message Will Be Saved: 
+        \nReminder saved in channel ID: ${rs.channelId}
+        \nReminder message: ${rs.message}                    
+        \nReminder set date: ${rs.dayOccurance}
+        \nDays before reminder: ${rs.setDate}
+        \nnextTimeToSendReminder: ${rs.nextReminderDate}
+        \`\`\``
+    );
 };
 
 /*
