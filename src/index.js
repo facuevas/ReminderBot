@@ -32,16 +32,10 @@ client.on('ready', () => {
         month: new Date().getMonth() + 1,
         year: new Date().getFullYear()
     }
-    const testDate = {
-        day: 30,
-        month: 8,
-        year: 2020
-    }
-    sendReminders(client, [textChannels[2]], testDate);
-    //textChannels[2].send("HELLO WORLD");
-    //console.log(client.channels.cache);
+    sendReminders(client, [textChannels[2]], todaysDate);
 });
 
+// Parse through messages
 client.on('message', msg => {
     // split message content into newlines
     let args = msg.content.split("\n");
@@ -71,7 +65,7 @@ client.on('message', msg => {
                 };
                 createReminder(reminder, msg);
                 break;
-            case "getreminder!":
+            case "getreminders!":
                 getReminder(msg);
                 break;
             case "deletereminder!":
@@ -82,7 +76,8 @@ client.on('message', msg => {
                 }
                 deleteReminder(msg, reminderId);
                 break;
-            case "disablereminders!":
+            case "remindme!":
+                msg.channel.send("The commands are: \n```createreminder! - Create a reminder \ngetreminders! - View reminders on the channel \ndeletereminder! - Delete specified reminder with id```");
                 break;
         }
     }
