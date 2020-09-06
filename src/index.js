@@ -32,7 +32,7 @@ client.on('ready', () => {
         month: new Date().getMonth() + 1,
         year: new Date().getFullYear()
     }
-    sendReminders(client, [textChannels[2]], todaysDate);
+    sendReminders(client, textChannels, todaysDate);
 });
 
 // Parse through messages
