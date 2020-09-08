@@ -1,4 +1,4 @@
-const ReminderSchema = require("../schemas/ReminderSchema");
+const ReminderSchema = require("../schemas/reminderSchema");
 const { Message } = require("discord.js");
 
 /*
@@ -76,6 +76,15 @@ const deleteReminder = async (client, reminderId) => {
     });
 };
 
+const clearAllReminders = async (client) => {
+    const channelId = client.channel.id;
+    await ReminderSchema.deleteMany({ channelId: channelId })
+        .then(
+            client.channel.send(`Clearing all reminders for channel ID ${channelId}`)
+        )
+        .catch(console.log("All reminders deleted already."));
+};
+
 /*
     When this function is called, it sends all the reminders
     for the channel if it is supposed to be called that day.
@@ -141,4 +150,5 @@ module.exports = {
     getReminder,
     deleteReminder,
     sendReminders,
+    clearAllReminders,
 };

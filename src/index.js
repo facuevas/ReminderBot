@@ -3,10 +3,11 @@ const Discord = require('discord.js');
 require('dotenv').config();
 const config = require('./config.json');
 const mongoose = require('mongoose');
-const { createReminder, 
-    getReminder, 
-    deleteReminder, 
-    sendReminders } = require('./commands/reminder');
+const { createReminder,
+    getReminder,
+    deleteReminder,
+    sendReminders,
+    clearAllReminders } = require('./commands/reminder');
 
 // Connect to MongoDB database
 const uri = process.env.ATLAS_DB_URI;
@@ -77,8 +78,10 @@ client.on('message', msg => {
                 deleteReminder(msg, reminderId);
                 break;
             case "remindme!":
-                msg.channel.send("The commands are: \n```createreminder! - Create a reminder \ngetreminders! - View reminders on the channel \ndeletereminder! - Delete specified reminder with id```");
+                msg.channel.send("The commands are: \n```createreminder! - Create a reminder \ngetreminders! - View reminders on the channel \ndeletereminder! - Delete specified reminder with id \nclearreminders! - Clear all reminders in the channel```");
                 break;
+            case "clearreminders!":
+                clearAllReminders(msg);
         }
     }
 });

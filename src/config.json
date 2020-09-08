@@ -3,6 +3,7 @@
         "createreminder!",
         "getreminders!",
         "deletereminder!",
+        "clearreminders!",
         "remindme!"
     ]
 }
