@@ -22,6 +22,12 @@ const createReminder = async ({ message, dayOccurance }, client) => {
         nextReminderDate: nextTimeToSendReminder,
     });
 
+    rs.save(err => {
+        if (err) {
+            console.log(err);
+        }
+    });
+    
     client.reply(
         `\`\`\`
         \nThe Following Message Will Be Saved: 

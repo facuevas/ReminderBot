@@ -82,6 +82,7 @@ client.on('message', msg => {
                 break;
             case "clearreminders!":
                 clearAllReminders(msg);
+                break;
         }
     }
 });
